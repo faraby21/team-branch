@@ -1,11 +1,424 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masuk — Catatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #12213B;
+    --navy-deep: #0C1728;
+    --ink: #1B1E27;
+    --gold: #C9A036;
+    --gold-soft: #E4C878;
+    --paper: #FBF8F2;
+    --paper-dim: #F1ECE1;
+    --slate: #7C8399;
+    --error: #C0533E;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+  }
+
+  body{
+    display: flex;
+    min-height: 100vh;
+    background: var(--paper);
+  }
+
+  .wrap{
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  /* ---------- LEFT PANEL ---------- */
+  .panel-story{
+    position: relative;
+    flex: 1 1 46%;
+    background: radial-gradient(120% 140% at 15% 10%, var(--navy) 0%, var(--navy-deep) 65%);
+    color: var(--paper);
+    padding: 4rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  .brand{
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-mark{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,160,54,0.2);
+  }
+
+  .story-copy{
+    max-width: 420px;
+  }
+
+  .story-copy .eyebrow{
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gold-soft);
+    margin-bottom: 1rem;
+  }
+
+  .story-copy h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(2.1rem, 3.4vw, 2.9rem);
+    line-height: 1.2;
+    margin: 0 0 1.1rem;
+  }
+
+  .story-copy p{
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: rgba(251,248,244,0.72);
+    margin: 0;
+  }
+
+  .notebook-illustration{
+    position: absolute;
+    right: -40px;
+    bottom: -30px;
+    opacity: 0.9;
+  }
+
+  .panel-story::before{
+    /* faint page-lines texture */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 38px,
+      rgba(251,248,244,0.035) 39px
+    );
+    pointer-events: none;
+  }
+
+  /* ---------- STITCH SEAM (signature element) ---------- */
+  .seam{
+    width: 28px;
+    flex: 0 0 28px;
+    position: relative;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .seam::before{
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    border-left: 2px dashed rgba(124,131,153,0.45);
+  }
+
+  .seam .stitch-dot{
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ---------- RIGHT PANEL ---------- */
+  .panel-form{
+    flex: 1 1 54%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background: var(--paper);
+  }
+
+  .card{
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .card .eyebrow{
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--slate);
+    margin-bottom: 0.6rem;
+  }
+
+  .card h2{
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.9rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .card .sub{
+    font-size: 0.92rem;
+    color: var(--slate);
+    margin: 0 0 2.2rem;
+  }
+
+  form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .field label{
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+    color: var(--ink);
+  }
+
+  .field input{
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    border: 1.5px solid #DCD5C4;
+    border-radius: 8px;
+    background: #FFFFFF;
+    color: var(--ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .field input::placeholder{ color: #B7BAC4; }
+
+  .field input:focus{
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,160,54,0.18);
+  }
+
+  .password-row{
+    position: relative;
+  }
+
+  .toggle-pass{
+    position: absolute;
+    right: 0.7rem;
+    top: 2.15rem;
+    background: none;
+    border: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    padding: 0.2rem 0.3rem;
+  }
+
+  .toggle-pass:hover{ color: var(--navy); }
+
+  .row-between{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  .remember{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--slate);
+  }
+
+  .remember input{ accent-color: var(--gold); width: 15px; height: 15px; }
+
+  .row-between a{
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+  }
+
+  .row-between a:hover{ border-color: var(--navy); }
+
+  .btn-primary{
+    margin-top: 0.4rem;
+    padding: 0.85rem 1rem;
+    background: var(--navy);
+    color: var(--paper);
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+
+  .btn-primary:hover{ background: var(--navy-deep); }
+  .btn-primary:active{ transform: translateY(1px); }
+
+  .btn-primary:focus-visible,
+  .toggle-pass:focus-visible,
+  .row-between a:focus-visible{
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .divider{
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.6rem 0;
+    color: var(--slate);
+    font-size: 0.78rem;
+  }
+
+  .divider::before, .divider::after{
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #E4DECF;
+  }
+
+  .footer-note{
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--slate);
+  }
+
+  .footer-note a{
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer-note a:hover{ text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  @media (max-width: 860px){
+    .panel-story{ display: none; }
+    .seam{ display: none; }
+    .panel-form{ padding: 2rem 1.4rem; }
+  }
+</style>
 </head>
 <body>
-    
+
+<div class="wrap">
+
+  <!-- LEFT: brand story panel -->
+  <div class="panel-story">
+    <div class="brand">
+      <span class="brand-mark"></span>
+      Catatan
+    </div>
+
+    <div class="story-copy">
+      <div class="eyebrow">Buku harian digital Anda</div>
+      <h1>Setiap halaman menunggu untuk dilanjutkan.</h1>
+      <p>Simpan gagasan, jadwal, dan cerita harian Anda dalam satu tempat yang rapi — selalu ada di genggaman, kapan pun Anda ingin menulis kembali.</p>
+    </div>
+
+    <svg class="notebook-illustration" width="220" height="200" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 170 L20 40 Q60 25 108 40 L108 175 Q60 158 20 170Z" stroke="#E4C878" stroke-width="1.4" fill="none" opacity="0.55"/>
+      <path d="M196 170 L196 40 Q156 25 108 40 L108 175 Q156 158 196 170Z" stroke="#E4C878" stroke-width="1.4" fill="none" opacity="0.55"/>
+      <line x1="34" y1="60" x2="90" y2="52" stroke="#E4C878" stroke-width="1" opacity="0.4"/>
+      <line x1="34" y1="80" x2="90" y2="72" stroke="#E4C878" stroke-width="1" opacity="0.4"/>
+      <line x1="34" y1="100" x2="90" y2="92" stroke="#E4C878" stroke-width="1" opacity="0.4"/>
+      <line x1="126" y1="52" x2="182" y2="60" stroke="#E4C878" stroke-width="1" opacity="0.4"/>
+      <line x1="126" y1="72" x2="182" y2="80" stroke="#E4C878" stroke-width="1" opacity="0.4"/>
+      <path d="M100 30 L146 96" stroke="#C9A036" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+      <path d="M146 96 L152 84 L138 88 Z" fill="#C9A036" opacity="0.8"/>
+    </svg>
+  </div>
+
+  <!-- STITCH SEAM -->
+  <div class="seam" aria-hidden="true">
+    <div class="stitch-dot" style="top: 8%;"></div>
+    <div class="stitch-dot" style="top: 22%;"></div>
+    <div class="stitch-dot" style="top: 36%;"></div>
+    <div class="stitch-dot" style="top: 50%;"></div>
+    <div class="stitch-dot" style="top: 64%;"></div>
+    <div class="stitch-dot" style="top: 78%;"></div>
+    <div class="stitch-dot" style="top: 92%;"></div>
+  </div>
+
+  <!-- RIGHT: login form -->
+  <div class="panel-form">
+    <div class="card">
+      <div class="eyebrow">Selamat datang kembali</div>
+      <h2>Masuk ke akun Anda</h2>
+      <p class="sub">Lanjutkan menulis dari halaman terakhir Anda.</p>
+
+      <form action="#" method="post" novalidate>
+        <div class="field">
+          <label for="email">Alamat email</label>
+          <input type="email" id="email" name="email" placeholder="nama@email.com" autocomplete="email" required>
+        </div>
+
+        <div class="field password-row">
+          <label for="password">Kata sandi</label>
+          <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" autocomplete="current-password" required>
+          <button type="button" class="toggle-pass" id="togglePass" aria-pressed="false">Tampilkan</button>
+        </div>
+
+        <div class="row-between">
+          <label class="remember">
+            <input type="checkbox" name="remember">
+            Ingat saya
+          </label>
+          <a href="#">Lupa kata sandi?</a>
+        </div>
+
+        <button type="submit" class="btn-primary">Masuk</button>
+      </form>
+
+      <div class="divider">atau</div>
+
+      <p class="footer-note">Belum punya akun? <a href="#">Daftar di sini</a></p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('togglePass');
+  const passInput = document.getElementById('password');
+  toggleBtn.addEventListener('click', () => {
+    const isHidden = passInput.type === 'password';
+    passInput.type = isHidden ? 'text' : 'password';
+    toggleBtn.textContent = isHidden ? 'Sembunyikan' : 'Tampilkan';
+    toggleBtn.setAttribute('aria-pressed', String(isHidden));
+  });
+</script>
+
 </body>
 </html>
